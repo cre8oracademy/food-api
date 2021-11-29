@@ -92,11 +92,11 @@ class adminController extends Controller
     }
     public function orders(Request $request)
     {
-        $orders = DB::table('order_t')
-            ->join('users', 'order_t.user_id', '=', 'users.id')
-            ->join('products', 'order_t.product_id', '=', 'products.id')
-            ->select('order_t.*', 'users.username', 'products.product_name')
-            ->get();
+        $orders = DB::table('order_t')->get();
+        foreach ($orders as $order) {
+            $order->details = DB::table('order_details')->where('order_id', $order->order_id)->get();
+            $order->items = DB::table('order_items')->where('order_id', $order->order_id)->get();
+        }
         return response()->json($orders);
     }
 }
