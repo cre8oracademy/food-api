@@ -22,7 +22,8 @@ class reviewsController extends Controller
     {
         $this->middleware('auth:api');
     }
-    public function add(Request $request){
+    public function add(Request $request)
+    {
         $rules = array(
             "review" => "required|numeric|min:1|max:5",
             "comment" => "required|min:20|max:500",
@@ -33,14 +34,14 @@ class reviewsController extends Controller
             return response()->json(['error' => $valid->errors()], 401);
         } else {
             $shop_id = DB::table('order_t')
-            ->where('order_uid', $valid->validated()['order_uid'])
-            ->pluck('shop_id');
+                ->where('order_uid', $valid->validated()['order_uid'])
+                ->pluck('shop_id');
             $order_id = DB::table('order_t')
-            ->where('order_uid', $valid->validated()['order_uid'])
-            ->pluck('order_id');
+                ->where('order_uid', $valid->validated()['order_uid'])
+                ->pluck('order_id');
             $product_id = DB::table('order_details')
-            ->where('order_id', $order_id[0])
-            ->pluck('product_category_item_id');
+                ->where('order_id', $order_id[0])
+                ->pluck('product_category_item_id');
             $review = new reviews;
             $review = new reviews;
             $review->comment = $valid->validated()['comment'];
@@ -50,6 +51,31 @@ class reviewsController extends Controller
             $review->order_uid = $valid->validated()['order_uid'];
             $review->save();
             return response()->json(['message' => "review submited"]);
+        }
+    }
+    public function get_reviews(Request $request, $product_id)
+
+    {
+        if ($product_id == null) {
+            echo $product_id;
+            return response()->json(['error' => "product id is required"], 401);
+        } else {
+            $reviews = DB::table('reviews_details')
+                ->where('for_product', $product_id)
+                ->get();
+            return response()->json($reviews);
+        }
+    }
+    //user reviews
+    public function get_user_reviews(Request $request, $user_id)
+    {
+        if ($user_id == null) {
+            return response()->json(['error' => "user id is required"], 401);
+        } else {
+            $reviews = DB::table('reviews_details')
+                ->where('created_by', $user_id)
+                ->get();
+            return response()->json($reviews);
         }
     }
     protected function guard()
