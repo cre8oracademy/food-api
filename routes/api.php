@@ -76,7 +76,7 @@ Route::group([
     Route::post('add', 'reviewsController@add');
     //get all reviews
     Route::get('get_reviews/{product_id}', 'reviewsController@get_reviews');
-    Route::get('get_user_reviews/{product_id}', 'reviewsController@get_reviews');
+    Route::get('get_user_reviews/{product_id}', 'reviewsController@get_user_reviews');
 });
 Route::group([
     'middlewere' => "api",

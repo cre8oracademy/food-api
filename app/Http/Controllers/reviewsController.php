@@ -73,7 +73,7 @@ class reviewsController extends Controller
             return response()->json(['error' => "user id is required"], 401);
         } else {
             $reviews = DB::table('reviews_details')
-                ->where('created_by', $user_id)
+                ->where('for_shop', $user_id)
                 ->get();
             return response()->json($reviews);
         }
