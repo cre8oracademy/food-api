@@ -67,6 +67,13 @@ Route::group([
     Route::get('canceled', 'ordersController@canceled');
     Route::get('active', 'ordersController@active');
     Route::get('order_details/{order_uid}', 'ordersController@order_details');
+    //add cradit card
+    Route::post('add_card', 'ordersController@add_card');
+    Route::post('remove_card', 'ordersController@remove_card');
+    //get card
+    Route::get('get_card', 'ordersController@get_card');
+    //add dilivry details
+    Route::post('add_delivery_details', 'ordersController@dilivrydetails');
 });
 Route::group([
     'middlewere' => "api",

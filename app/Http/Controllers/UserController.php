@@ -20,7 +20,7 @@ class UserController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login', 'register','sendResetLinkResponse','verify','sendResetResponse']]);
+        $this->middleware('auth:api', ['except' => ['login', 'register', 'sendResetLinkResponse', 'verify', 'sendResetResponse']]);
     }
     public function login(Request $request)
     {
@@ -109,22 +109,22 @@ class UserController extends Controller
         });
         if ($response == Password::PASSWORD_RESET) {
             $message = "Password reset successfully";
-            $secuss= true;
-
+            $secuss = true;
         } else {
             $message = "Password reset Not successfully";
-            $secuss= false;
+            $secuss = false;
         }
-        $response = ['data' => '', 'message' => $message,"Secusss"=>$secuss];
+        $response = ['data' => '', 'message' => $message, "Secusss" => $secuss];
         return response()->json($response);
     }
-    public function profile(Request $request){
+    public function profile(Request $request)
+    {
         $user = DB::table('users')
-        ->where('id',$request->user()->id)
-        ->select('id','username','email','role','email_verified_at')->get();
-       $profile = DB::table('profiles')
-            ->where('user_id',$request->user()->id)->get();
-        return response()->json(["Errors"=>"","seccuss"=> true,"User"=>$user,"Profile"=>$profile],200);
+            ->where('id', $request->user()->id)
+            ->select('id', 'username', 'email', 'role', 'email_verified_at')->get();
+        $profile = DB::table('profiles')
+            ->where('user_id', $request->user()->id)->get();
+        return response()->json(["Errors" => "", "seccuss" => true, "User" => $user, "Profile" => $profile], 200);
     }
     public function verify($user_id, Request $request)
     {
@@ -176,19 +176,19 @@ class UserController extends Controller
                 }
             }
             try {
-              $profile = User::find($user['id'])->setProfiles;
-              $users = User::find($user['id']);
-              DB::table('profiles')
+                $profile = User::find($user['id'])->setProfiles;
+                $users = User::find($user['id']);
+                DB::table('profiles')
                     ->where('user_id', $request->user()->id)
                     ->update([
-                      'Description' => $valid->validated()['Description'] ?? $profile['Description'],
-                      'name'=> $valid->validated()['name'] ?? $profile['name'],
-                      'Phone'=> $valid->validated()['Phone'] ?? $profile['Phone'],
-                      'Type_of_Business' => $valid->validated()['Type_of_Business'] ?? $profile['Type_of_Business'],
-                  ]);
-                   DB::table('users')
-                         ->where('id', $request->user()->id)
-                         ->update(['email' => $valid->validated()['email'] ?? $users['email']]);
+                        'Description' => $valid->validated()['Description'] ?? $profile['Description'],
+                        'name' => $valid->validated()['name'] ?? $profile['name'],
+                        'Phone' => $valid->validated()['Phone'] ?? $profile['Phone'],
+                        'Type_of_Business' => $valid->validated()['Type_of_Business'] ?? $profile['Type_of_Business'],
+                    ]);
+                DB::table('users')
+                    ->where('id', $request->user()->id)
+                    ->update(['email' => $valid->validated()['email'] ?? $users['email']]);
                 return response()->json(['message' => "Profile Updated Secussfully", "errors" =>  $errors]);
             } catch (Exception $e) {
                 return response()->json(['message' => "Error"], 302);
